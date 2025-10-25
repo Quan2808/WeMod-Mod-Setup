@@ -1,5 +1,3 @@
-#Requires -RunAsAdministrator
-
 # Define URLs for downloading files
 $weModInstallerUrl = "https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/installer/WeMod_8.2.0_Installer.exe"
 $weModPremiumZipUrl = "https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/resources/WeMod_Premium.zip"
@@ -29,8 +27,62 @@ function Write-Log {
     )
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logMessage = "[$timestamp] [$Level] $Message"
-    Write-Host $logMessage
+    
+    switch ($Level) {
+        "INFO"    { Write-Host $logMessage -ForegroundColor Green }
+        "WARNING" { Write-Host $logMessage -ForegroundColor Yellow }
+        "ERROR"   { Write-Host $logMessage -ForegroundColor Red }
+    }
+    
     Add-Content -Path $logFile -Value $logMessage -ErrorAction SilentlyContinue
+}
+
+# Check for administrative privileges
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    # Ensure temp directory exists for logging
+    if (-not (Test-Path $tempDir)) {
+        New-Item -Path $tempDir -ItemType Directory -Force | Out-Null
+    }
+    
+    Write-Log -Message "Administrative privileges required to run this script." -Level ERROR
+    Write-Log -Message "Would you like to relaunch the script as Administrator? (Y/N, press Enter for N)" -Level WARNING
+    
+    # Wait for user input with a 30-second timeout
+    $response = $null
+    $timeoutSeconds = 30
+    $startTime = Get-Date
+    while ($null -eq $response -and ((Get-Date) - $startTime).TotalSeconds -lt $timeoutSeconds) {
+        if ([Console]::KeyAvailable) {
+            $response = [Console]::ReadKey($true).KeyChar
+            break
+        }
+        Start-Sleep -Milliseconds 100
+    }
+    
+    if ($response -match '^[Yy]$') {
+        Write-Log -Message "Relaunching script with administrative privileges..." -Level INFO
+        Write-Log -Message "Đang chạy lại script với quyền quản trị..." -Level INFO
+        # Check for script path
+        if ($PSCommandPath) {
+            $scriptPath = $PSCommandPath
+        } else {
+            Write-Log -Message "Cannot determine script path (possibly running from URL). Please save the script locally and run again." -Level ERROR
+            Write-Log -Message "Press any key to exit..." -Level WARNING
+            $null = [Console]::ReadKey($true)
+            exit 1
+        }
+        Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs
+        Write-Log -Message "Script relaunched. This instance will now exit." -Level INFO
+        Write-Log -Message "Press any key to exit..." -Level WARNING
+        $null = [Console]::ReadKey($true)
+        exit 0
+    } else {
+        Write-Log -Message "User declined to run as Administrator. Exiting script." -Level ERROR
+        Write-Log -Message "Press any key to exit..." -Level WARNING
+        $null = [Console]::ReadKey($true)
+        exit 1
+    }
 }
 
 # Function to validate URL accessibility
@@ -146,7 +198,7 @@ try {
     # Prevent updates
     Write-Log -Message "Renaming Update.exe to prevent updates..." -Level INFO
     if (Test-Path $weModUpdateExe) {
-        Rename-Item -Path $weModUpdateExe -NewName "Update1.exe" -Force
+        Rename-Item -Path $weModUpdateExe -NewName $weModUpdateRenamed -Force
         Write-Log -Message "Update.exe renamed successfully." -Level INFO
     } else {
         Write-Log -Message "Update.exe not found at $weModUpdateExe" -Level WARNING
