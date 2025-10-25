@@ -1,108 +1,65 @@
-# WeMod Premium Mod Setup Instructions
+# WeMod Premium Mod Setup
 
-This document provides instructions to set up WeMod version 8.2.0 with a premium modification using files from the GitHub repository: https://github.com/Quan2808/WeMod-Mod-Setup.
+<!-- [![GitHub Repo stars](https://img.shields.io/github/stars/Quan2808/WeMod-Mod-Setup)](https://github.com/Quan2808/WeMod-Mod-Setup) -->
 
-## Prerequisites
+[![GitHub last commit](https://img.shields.io/github/last-commit/Quan2808/WeMod-Mod-Setup)](https://github.com/Quan2808/WeMod-Mod-Setup)
+[![License](https://img.shields.io/github/license/Quan2808/WeMod-Mod-Setup)](https://github.com/Quan2808/WeMod-Mod-Setup/blob/main/LICENSE)
 
-- Administrative privileges on a Windows system.
-- A tool like CCleaner (optional) for registry cleanup.
-- A temporary email address for logging into WeMod (recommended for safety).
-- Internet access to download files from GitHub.
+This repository provides tools and instructions to set up WeMod version 8.2.0 with a Premium Mod on Windows systems. It includes installers, mod files, and PowerShell scripts for both manual and automated setup.
 
-## Directory Structure
+**⚠️ Warning**: This involves third-party modifications that may violate WeMod's Terms of Service (ToS). Use at your own risk. Always use a temporary email for WeMod login to protect your privacy.
 
-The required files are hosted at:
+## Features
+
+- Install WeMod 8.2.0 (locked to avoid forced updates).
+- Apply Premium Mod via `app.asar` replacement for premium features.
+- Disable WeMod auto-updates to maintain mod compatibility.
+- Manual setup and automated PowerShell script options.
+- Safe, tested files (e.g., `WeMod_Premium.zip` contains only `app.asar`).
+
+## Repository Structure
 
 ```
-wemod-mod-setup/
-├── resources/
-│ └── WeMod_Premium.zip
+WeMod-Mod-Setup/
 ├── installer/
-│ └── WeMod_8.2.0_Installer.exe
+│   └── WeMod_8.2.0_Installer.exe  # Official WeMod 8.2.0 installer
+├── resources/
+│   └── WeMod_Premium.zip          # Premium mod archive (app.asar)
 ├── scripts/
-│ └── setup.ps1
+│   └── WeMod-Mod-AutoSetup.ps1    # Advanced automated setup script
+├── INSTALL.md                     # Detailed installation guide
+└── README.md                      # This file
 ```
 
-## Manual Setup Instructions
+## Quick Start
 
-1.  Uninstall WeMod:
+1. **Manual Setup**:
 
-- If WeMod is installed, uninstall it via the Control Panel or Settings.
+   - Follow the step-by-step guide in [INSTALL.md](INSTALL.md).
 
-2. Clean WeMod Directories:
+2. **Automated Setup (Download Script)**:
 
-- Delete the following directories:
+   - Download: [WeMod-Mod-AutoSetup.ps1](https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/WeMod-Mod-AutoSetup.ps1)
+   - Run in PowerShell (Admin): `.\WeMod-Mod-AutoSetup.ps1`
+   - Optional: `.\WeMod-Mod-AutoSetup.ps1 -SkipCleanup` (if manually cleaned).
 
-  `%LocalAppData%\WeMod` (e.g., `C:\Users\<YourUsername>\AppData\Local\WeMod`)
+3. **Direct Run from GitHub**:
 
-  `%AppData%\WeMod` (e.g., `C:\Users\<YourUsername>\AppData\Roaming\WeMod`)
+   - Run in PowerShell (Admin):
 
-3. Optional Registry Cleanup:
+     ```powershell
+     Invoke-Expression ((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/WeMod-Mod-AutoSetup.ps1' -UseBasicParsing).Content)
+     ```
 
-- Use a tool like CCleaner to clean the Windows registry. This step is optional and its effectiveness is not guaranteed.
-
-4. Download WeMod Installer:
-
-- Download `WeMod_8.2.0_Installer.exe` from: `https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/installer/WeMod_8.2.0_Installer.exe`
-
-5. Install WeMod:
-
-- Run the downloaded installer.
-- If WeMod attempts to update after installation, close it immediately to prevent updates.
-
-6. Prevent Updates:
-
-- Navigate to `%LocalAppData%\WeMod.`
-- Locate `Update.exe` and rename it to `Update1.exe` (or similar) to disable automatic updates.
-
-7. Download Premium Mod:
-
-- Download `WeMod_Premium.zip` from: `https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/resources/WeMod_Premium.zip`
-- This file is reported to be safe and contains the `app.asar` file.
-
-8. Replace app.asar:
-
-- Extract `WeMod_Premium.zip` to access the `app.asar` file.
-- Copy `app.asar` to `%LocalAppData%\WeMod\app-8.2.0\resources`, replacing the existing `app.asar` file.
-
-9. Run WeMod:
-
-Launch WeMod and log in. For safety, use a temporary email address.
-
-## Automated Setup with PowerShell
-
-1. Download the Setup Script:
-
-- Download `setup.ps1` from: `https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/setup.ps1`
-- Save it to a local directory (e.g., `C:\Users\<YourUsername>\Downloads`).
-
-2. Run the Script:
-
-- Open PowerShell as an administrator.
-- Navigate to the directory containing `setup.ps1` using: `cd <path-to-directory>`
-
-- Run the script: `.\setup.ps1`
-
-3. Script Actions:
-
-- Downloads the required files from the GitHub repository.
-- Uninstalls any existing WeMod installation.
-- Cleans WeMod directories.
-- Installs WeMod 8.2.0.
-- Renames `Update.exe` to prevent updates.
-- Extracts and replaces `app.asar` from `WeMod_Premium.zip`.
-- Cleans up temporary files.
-
-4. Post-Setup:
-
-- Once the script completes, launch WeMod and log in with a temporary email.
+   - Optional: Append `-SkipCleanup` if you cleaned manually.
 
 ## Notes
 
-- The `WeMod_Premium.zip` file is reported to be safe and contains only the app.asar file.
-- Using a temporary email is recommended to protect your personal information.
-- Ensure a stable internet connection for downloading files.
+- Version: Locked to WeMod 8.2.0 to ensure mod compatibility.
+- Safety:
 
-## Disclaimer
+  - Files are sourced from trusted locations. Scan with antivirus if concerned.
+  - `WeMod_Premium.zip` contains only `app.asar`, reported as safe.
 
-This setup involves third-party modifications to WeMod, which may violate its terms of service. Proceed at your own risk. The author is not responsible for any consequences resulting from the use of these instructions or the script.
+- Updates: If WeMod updates accidentally, re-run the setup to restore the mod.
+- Legal: This is for educational purposes only. Respect WeMod's ToS.
