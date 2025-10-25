@@ -1,52 +1,99 @@
-WeMod Premium Mod Setup
-This repository provides instructions and a PowerShell script to set up WeMod version 8.2.0 with a premium mod. Follow the steps below or use the provided setup_wemod.ps1 script to automate the process.
-Directory Structure
+# Installation Guide for WeMod Premium Mod Setup
 
-```
-wemod-mod-setup/
-├── resources/
-│ └── WeMod_Premium.zip
-├── installer/
-│ └── WeMod_8.2.0_Installer.exe
-└── scripts
-│ └── setup.exe
-```
+This guide provides step-by-step instructions to install WeMod version 8.2.0 with the Premium Mod using files from this repository. Follow these steps carefully to avoid issues.
 
-Manual Setup Instructions
+## Prerequisites
 
-Uninstall WeMod: If WeMod is already installed, uninstall it via the Control Panel.
-Clean Directories: Delete the following directories:
-%LocalAppData%\WeMod
-%AppData%\WeMod
+- **Operating System**: Windows 10 or later.
+- **Permissions**: Run all commands as Administrator.
+- **Tools**:
+  - PowerShell (pre-installed on Windows).
+  - Internet connection for downloading files.
+- **Safety Tips**:
+  - Use a temporary email for WeMod login to protect your privacy.
+  - This mod may violate WeMod's Terms of Service (ToS). Proceed at your own risk.
+  - Optional: Install CCleaner for registry cleanup.
 
-Optional Registry Cleanup: Use a tool like CCleaner to clean the registry (effectiveness not guaranteed).
-Download WeMod Installer: Obtain WeMod_8.2.0_Installer.exe from the installer directory or from this link.
-Install WeMod: Run the installer and close WeMod immediately if it attempts to update.
-Prevent Updates: Navigate to %LocalAppData%\WeMod and rename Update.exe to Update1.exe.
-Download Premium Mod: Obtain WeMod_Premium.zip from the resources directory or from this link. This file is safe and contains app.asar.
-Replace app.asar: Extract WeMod_Premium.zip and copy the app.asar file to %LocalAppData%\WeMod\app-8.2.0\resources, replacing the existing app.asar.
-Run WeMod: Launch WeMod and log in. For safety, use a temporary email address.
+## Method 1: Manual Installation (No Scripting)
 
-Automated Setup with PowerShell
+1. **Uninstall Existing WeMod**:
 
-Ensure you have administrative privileges.
-Place setup_wemod.ps1 in the root of the quan2808-wemod-mod-setup directory.
-Open PowerShell as an administrator, navigate to the directory, and run:.\setup_wemod.ps1
+   - Go to Settings > Apps > Search for "WeMod" > Uninstall.
+   - Or use Control Panel > Programs and Features.
 
-The script will:
-Uninstall any existing WeMod installation.
-Clean WeMod directories.
-Install WeMod 8.2.0.
-Rename Update.exe to prevent updates.
-Extract and replace app.asar from WeMod_Premium.zip.
+2. **Clean Directories**:
 
-Once complete, run WeMod and log in with a temporary email.
+   - Delete these folders (replace `<YourUsername>` with your user folder):
+     - `%LocalAppData%\WeMod` (e.g., `C:\Users\<YourUsername>\AppData\Local\WeMod`)
+     - `%AppData%\WeMod` (e.g., `C:\Users\<YourUsername>\AppData\Roaming\WeMod`)
 
-Notes
+3. **Optional: Clean Registry**:
 
-The WeMod_Premium.zip file is reported to be safe and contains only the app.asar file.
-Using a temporary email for login is recommended to protect your personal information.
-Ensure the directory structure is intact before running the script.
+   - Use CCleaner (or similar tool) to scan and clean WeMod entries. Restart your PC.
 
-Disclaimer
-This setup involves third-party modifications to WeMod. Use at your own risk, as it may violate WeMod's terms of service. The author is not responsible for any consequences arising from the use of this script or instructions.
+4. **Download and Install WeMod**:
+
+   - Download: [WeMod_8.2.0_Installer.exe](https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/installer/WeMod_8.2.0_Installer.exe)
+   - Run the installer as Administrator.
+   - If WeMod launches and checks for updates, close it immediately.
+
+5. **Disable Updates**:
+
+   - Navigate to `%LocalAppData%\WeMod`.
+   - Rename `Update.exe` to `Update.exe.bak`.
+
+6. **Apply Premium Mod**:
+
+   - Download: [WeMod_Premium.zip](https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/resources/WeMod_Premium.zip)
+   - Extract the ZIP to get `app.asar`.
+   - Copy `app.asar` to `%LocalAppData%\WeMod\app-8.2.0\resources`, replacing the existing file.
+
+7. **Launch WeMod**:
+   - Run `WeMod.exe` from `%LocalAppData%\WeMod`.
+   - Log in with a temporary email.
+   - Enjoy Premium features!
+
+## Method 2: Automated Installation
+
+Use the PowerShell script for a hands-free setup.
+
+1. **Download the Script**:
+
+   - Get [WeMod-Mod-AutoSetup.ps1](https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/WeMod-Mod-AutoSetup.ps1)
+   - Save to a folder (e.g., `C:\Downloads`).
+
+2. **Run PowerShell as Administrator**:
+
+   - Press Win + X > Windows PowerShell (Admin).
+   - Enable script execution (one-time): `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+   - Navigate: `cd C:\Downloads` (adjust path as needed).
+   - Run: `.\WeMod-Mod-AutoSetup.ps1`
+     - Optional: `.\WeMod-Mod-AutoSetup.ps1 -SkipCleanup` (if you cleaned manually).
+
+3. **Post-Installation**:
+   - The script handles uninstall, cleanup, install, mod application, and temp file removal.
+   - Launch WeMod manually and log in.
+
+## Method 3: Run Script Directly from GitHub (Recommended)
+
+Run the PowerShell script directly from the repository without downloading it manually.
+
+1. **Open PowerShell as Administrator**:
+
+   - Press Win + X > Windows PowerShell (Admin).
+   - Enable script execution (one-time): `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+
+2. **Run the Script Directly**:
+   - Execute the following command in PowerShell to download and run the script:
+        ```powershell
+        Invoke-Expression ((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/WeMod-Mod-AutoSetup.ps1' -UseBasicParsing).Content)
+        ```
+   - Optional: If you manually cleaned WeMod directories and registry, append the -SkipCleanup flag:
+        ```powershell
+        Invoke-Expression ((Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Quan2808/WeMod-Mod-Setup/main/scripts/WeMod-Mod-AutoSetup.ps1' -UseBasicParsing).Content) -SkipCleanup
+        ```
+3. **Post-Installation**:
+
+    - The script automatically handles uninstall, cleanup (unless -SkipCleanup is used), installation, mod application, and temp file cleanup.
+    - Launch WeMod manually from %LocalAppData%\WeMod\WeMod.exe.
+    - Log in with a temporary email.
